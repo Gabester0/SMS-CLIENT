@@ -83,6 +83,15 @@ textarea {
   }
 }
 
+.submit-button {
+  color: white;
+  background-color: black;
+
+  &:disabled {
+    background-color: lighten(black, 40%);
+  }
+}
+
 .error,
 .error-message {
   color: #b00020;

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { WebsocketService } from './websocket.service';
 
 export interface Message {
   _id: string;
@@ -18,11 +19,31 @@ export interface Message {
 @Injectable({ providedIn: 'root' })
 export class MessageService {
   private apiUrl = environment.apiUrl + '/messages';
+  private messages = new BehaviorSubject<Message[]>([]);
+  messages$ = this.messages.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private websocketService: WebsocketService
+  ) {
+    // Subscribe to real-time status updates
+    this.websocketService.messageStatusUpdates$.subscribe(update => {
+      if (update) {
+        const currentMessages = this.messages.getValue();
+        const updatedMessages = currentMessages.map(message => 
+          message._id === update.message_id 
+            ? { ...message, status: update.status }
+            : message
+        );
+        this.messages.next(updatedMessages);
+      }
+    });
+  }
 
   getMessages(): Observable<Message[]> {
-    return this.http.get<Message[]>(this.apiUrl, { withCredentials: true });
+    this.http.get<Message[]>(this.apiUrl, { withCredentials: true })
+      .subscribe(messages => this.messages.next(messages));
+    return this.messages$;
   }
 
   sendMessage(data: {

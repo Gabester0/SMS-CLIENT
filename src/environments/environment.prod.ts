@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://your-production-api-url', // Change to your prod API URL
+  apiUrl: 'https://sms-api-production-b599.up.railway.app', // Change to your prod API URL
 };
