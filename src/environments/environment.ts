@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:3000', // dev API URL
+  production: true,
+  apiUrl: 'https://sms-api-production-b599.up.railway.app',
 };
