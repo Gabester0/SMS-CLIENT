@@ -3,6 +3,6 @@
   <button mat-button color="primary" (click)="logout()">Logout</button>
 </div>
 <div class="messages-container">
-  <app-new-message (messageSent)="refreshMessages()"></app-new-message>
+  <app-new-message (messageSent)="onMessageSent($event)"></app-new-message>
   <app-message-history></app-message-history>
 </div>

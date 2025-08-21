@@ -28,6 +28,10 @@ export class MessageHistoryComponent implements OnInit {
   loading = true;
   error: string | null = null;
 
+  addMessage(message: Message) {
+    this.messages.unshift(message);
+  }
+
   constructor(private messageService: MessageService) {}
 
   ngOnInit() {

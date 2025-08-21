@@ -10,7 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MessageService } from '../services/message.service';
+import { MessageService, Message } from '../services/message.service';
 
 @Component({
   selector: 'app-new-message',
@@ -27,7 +27,7 @@ import { MessageService } from '../services/message.service';
   styleUrls: ['./new-message.component.scss'],
 })
 export class NewMessageComponent {
-  @Output() messageSent = new EventEmitter<void>();
+  @Output() messageSent = new EventEmitter<Message>();
   messageForm: FormGroup;
   loading = false;
   error: string | null = null;
@@ -38,6 +38,10 @@ export class NewMessageComponent {
       to_phone_number: [{ value: this.TWILIO_NUMBER, disabled: true }],
       content: ['', [Validators.required, Validators.maxLength(250)]],
     });
+  }
+
+  clearMessage() {
+    this.messageForm.get('content')?.reset();
   }
 
   onSubmit() {
@@ -52,10 +56,10 @@ export class NewMessageComponent {
         content: this.messageForm.get('content')?.value,
       })
       .subscribe({
-        next: () => {
+        next: (message) => {
           this.loading = false;
           this.messageForm.get('content')?.reset();
-          this.messageSent.emit();
+          this.messageSent.emit(message);
         },
         error: (err) => {
           this.error = err.error?.errors?.[0] || 'Failed to send message';

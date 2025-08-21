@@ -4,6 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { NewMessageComponent } from '../new-message/new-message.component';
+import { Message } from '../services/message.service';
 
 @Component({
   selector: 'app-messages',
@@ -30,7 +31,9 @@ export class MessagesComponent {
     });
   }
 
-  refreshMessages() {
-    this.messageHistory?.ngOnInit(); // crude, but works for now
+  onMessageSent(message: Message) {
+    if (this.messageHistory) {
+      this.messageHistory.addMessage(message);
+    }
   }
 }

@@ -14,8 +14,19 @@
 
 .form-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 1rem;
+}
+
+.clear-button {
+  text-decoration: underline;
+  min-width: auto;
+  padding: 0;
+
+  &:disabled {
+    color: #ccc;
+  }
 }
 
 .error {
