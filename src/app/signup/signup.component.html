@@ -1,0 +1,61 @@
+<form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="auth-form">
+  <h2>Sign Up</h2>
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" type="email" required />
+    <mat-error *ngIf="signupForm.get('email')?.hasError('required')">
+      Email is required
+    </mat-error>
+    <mat-error *ngIf="signupForm.get('email')?.hasError('pattern')">
+      Invalid email format
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Password</mat-label>
+    <input matInput formControlName="password" type="password" required />
+    <mat-error *ngIf="signupForm.get('password')?.hasError('required')">
+      Password is required
+    </mat-error>
+    <mat-error *ngIf="signupForm.get('password')?.hasError('minlength')">
+      Password must be at least 6 characters
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Confirm Password</mat-label>
+    <input
+      matInput
+      formControlName="password_confirmation"
+      type="password"
+      required
+    />
+    <mat-error
+      *ngIf="signupForm.get('password_confirmation')?.hasError('required')"
+      >Confirmation is required</mat-error
+    >
+    <mat-error
+      *ngIf="
+        signupForm
+          .get('password_confirmation')
+          ?.hasError('passwordsMismatch') &&
+        signupForm.get('password_confirmation')?.touched
+      "
+    >
+      Passwords do not match
+    </mat-error>
+  </mat-form-field>
+  <div class="flex-row">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="loading"
+    >
+      Sign Up
+    </button>
+  </div>
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <div class="flex-row">
+    <a class="login" routerLink="/login">Already have an account? Login</a>
+  </div>
+</form>

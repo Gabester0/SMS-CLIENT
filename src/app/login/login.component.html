@@ -1,0 +1,41 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+  <h2>Login</h2>
+  <div *ngIf="signupSuccess" class="success flex-row">
+    Account created! Please log in.
+  </div>
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" type="email" required />
+    <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+      Email is required
+    </mat-error>
+    <mat-error *ngIf="loginForm.get('email')?.hasError('pattern')">
+      Invalid email format
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Password</mat-label>
+    <input matInput formControlName="password" type="password" required />
+    <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+      Password is required
+    </mat-error>
+    <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">
+      Password must be at least 6 characters
+    </mat-error>
+  </mat-form-field>
+  <div class="flex-row">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="loading"
+    >
+      Login
+    </button>
+  </div>
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <div class="flex-row">
+    <a class="signup" routerLink="/signup">Don't have an account? Sign up</a>
+  </div>
+</form>
