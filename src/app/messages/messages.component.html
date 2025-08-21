@@ -1,0 +1,8 @@
+<div class="flex-row">
+  <h1 class="app-title">MY SMS MESSENGER</h1>
+  <button mat-button color="primary" (click)="logout()">Logout</button>
+</div>
+<div class="messages-container">
+  <app-new-message (messageSent)="onMessageSent($event)"></app-new-message>
+  <app-message-history></app-message-history>
+</div>

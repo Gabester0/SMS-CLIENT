@@ -1,16 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { MessageHistoryComponent } from '../message-history/message-history.component';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { NewMessageComponent } from '../new-message/new-message.component';
+import { Message } from '../services/message.service';
 
 @Component({
   selector: 'app-messages',
   standalone: true,
-  template: `
-    <h2>View Messages</h2>
-    <button (click)="logout()">Logout</button>
-  `,
+  imports: [MessageHistoryComponent, MatButtonModule, NewMessageComponent],
+  templateUrl: './messages.component.html',
+  styleUrls: ['./messages.component.scss'],
 })
 export class MessagesComponent {
+  @ViewChild(MessageHistoryComponent) messageHistory?: MessageHistoryComponent;
+
   constructor(private auth: AuthService, private router: Router) {}
 
   logout() {
@@ -24,5 +29,11 @@ export class MessagesComponent {
         this.router.navigate(['/login']);
       },
     });
+  }
+
+  onMessageSent(message: Message) {
+    if (this.messageHistory) {
+      this.messageHistory.addMessage(message);
+    }
   }
 }

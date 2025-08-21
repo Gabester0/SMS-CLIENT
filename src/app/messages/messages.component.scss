@@ -1,0 +1,28 @@
+.messages-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  justify-content: center;
+}
+
+.messages-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.app-title {
+  text-align: center;
+  font-size: 2.25rem;
+  margin-top: 3rem;
+}
+
+button {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+}

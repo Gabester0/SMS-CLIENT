@@ -1,0 +1,102 @@
+.new-message-form {
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 600px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+input,
+textarea {
+  border: 1px solid black;
+  border-radius: 12px;
+  padding: 1rem;
+  font-size: 1rem;
+  background: white;
+  font-family: inherit;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: #1976d2;
+  }
+
+  &::placeholder {
+    color: #757575;
+  }
+}
+
+textarea {
+  resize: none;
+  min-height: 120px;
+}
+
+.hint {
+  color: #757575;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.textarea-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 0.25rem;
+  gap: 1rem;
+}
+
+.character-count {
+  color: #757575;
+  font-size: 0.75rem;
+  margin-left: auto; /* This will push it to the right */
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.clear-button {
+  min-width: auto;
+  padding: 0;
+  text-decoration: underline;
+
+  &:disabled {
+    color: #ccc;
+  }
+}
+
+.error,
+.error-message {
+  color: #b00020;
+  font-size: 0.75rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0 0 2rem;
+}
+
+@media (max-width: 500px) {
+  .new-message-form {
+    width: 300px;
+  }
+}
