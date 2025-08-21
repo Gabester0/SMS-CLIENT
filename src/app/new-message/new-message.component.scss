@@ -1,0 +1,34 @@
+.new-message-form {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.error {
+  color: #b00020;
+  margin-top: 1rem;
+  font-size: 0.9em;
+}
+
+textarea {
+  resize: none;
+}
+
+h2 {
+  margin: 0 0 2rem;
+  font-weight: 500;
+}

@@ -25,9 +25,14 @@ export class MessageService {
     return this.http.get<Message[]>(this.apiUrl, { withCredentials: true });
   }
 
-  sendMessage(data: { to: string; body: string }): Observable<Message> {
-    return this.http.post<Message>(this.apiUrl, data, {
-      withCredentials: true,
-    });
+  sendMessage(data: {
+    to_phone_number: string;
+    content: string;
+  }): Observable<Message> {
+    return this.http.post<Message>(
+      this.apiUrl,
+      { message: data },
+      { withCredentials: true }
+    );
   }
 }

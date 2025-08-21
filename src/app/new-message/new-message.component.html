@@ -1,0 +1,52 @@
+<form
+  [formGroup]="messageForm"
+  (ngSubmit)="onSubmit()"
+  class="new-message-form"
+>
+  <h2>New Message</h2>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>To Phone Number</mat-label>
+    <input
+      matInput
+      formControlName="to_phone_number"
+      type="text"
+      placeholder="+18777804236"
+    />
+    <mat-hint>Messages will be sent to our Twilio virtual number</mat-hint>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Message</mat-label>
+    <textarea
+      matInput
+      formControlName="content"
+      required
+      rows="4"
+      placeholder="Type your message here..."
+    ></textarea>
+    <mat-hint align="end"
+      >{{ messageForm.get("content")?.value?.length || 0 }}/250</mat-hint
+    >
+    <mat-error *ngIf="messageForm.get('content')?.hasError('required') && messageForm.get('content')?.touched">
+      Message is required
+    </mat-error>
+    <mat-error *ngIf="messageForm.get('content')?.hasError('maxlength')">
+      Message must not exceed 250 characters
+    </mat-error>
+  </mat-form-field>
+
+  <div class="form-actions">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="messageForm.invalid || loading"
+    >
+      Send Message
+    </button>
+  </div>
+
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+  <div *ngIf="error" class="error">{{ error }}</div>
+</form>
