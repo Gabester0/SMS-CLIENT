@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"
-  publish = "dist/sms-client"
+  publish = "dist/sms-client/browser"
 
 [context.production]
   command = "ng build --configuration=production"
