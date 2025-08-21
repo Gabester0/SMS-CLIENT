@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { of, throwError } from 'rxjs';
+import { of, throwError, BehaviorSubject } from 'rxjs';
 
 describe('MessageHistoryComponent', () => {
   let component: MessageHistoryComponent;
@@ -37,8 +37,14 @@ describe('MessageHistoryComponent', () => {
     },
   ];
 
+  let messagesSubject: BehaviorSubject<Message[]>;
+
   beforeEach(async () => {
     messageService = jasmine.createSpyObj('MessageService', ['getMessages']);
+    messagesSubject = new BehaviorSubject<Message[]>([]);
+    Object.defineProperty(messageService, 'messages$', {
+      get: () => messagesSubject.asObservable(),
+    });
 
     await TestBed.configureTestingModule({
       imports: [
@@ -62,30 +68,45 @@ describe('MessageHistoryComponent', () => {
   });
 
   describe('ngOnInit', () => {
-    it('should load messages successfully', () => {
-      messageService.getMessages.and.returnValue(of(mockMessages));
+    it('should load messages successfully', (done) => {
+      messageService.getMessages.and.callFake(() => {
+        messagesSubject.next(mockMessages);
+        return of(mockMessages);
+      });
 
       fixture.detectChanges();
 
-      expect(component.messages).toEqual(mockMessages);
-      expect(component.loading).toBeFalse();
-      expect(component.error).toBeNull();
+      component.messages$.subscribe((messages) => {
+        expect(messages).toEqual(mockMessages);
+        expect(component.loading).toBeFalse();
+        expect(component.error).toBeNull();
+        done();
+      });
     });
 
-    it('should handle error when loading messages', () => {
-      messageService.getMessages.and.returnValue(throwError(() => new Error()));
+    it('should handle error when loading messages', (done) => {
+      messageService.getMessages.and.callFake(() => {
+        // Don't emit new messages, just throw error
+        return throwError(() => new Error());
+      });
 
       fixture.detectChanges();
 
-      expect(component.messages).toEqual([]);
-      expect(component.loading).toBeFalse();
-      expect(component.error).toBe('Failed to load messages.');
+      component.messages$.subscribe((messages) => {
+        expect(messages).toEqual([]);
+        expect(component.loading).toBeFalse();
+        expect(component.error).toBe('Failed to load messages.');
+        done();
+      });
     });
   });
 
   describe('addMessage', () => {
-    it('should add new message to the beginning of the list', () => {
-      messageService.getMessages.and.returnValue(of(mockMessages));
+    it('should add new message to the beginning of the list', (done) => {
+      messageService.getMessages.and.callFake(() => {
+        messagesSubject.next(mockMessages);
+        return of(mockMessages);
+      });
       fixture.detectChanges();
 
       const newMessage: Message = {
@@ -100,10 +121,14 @@ describe('MessageHistoryComponent', () => {
         user_id: 'user1',
       };
 
-      component.addMessage(newMessage);
+      // Simulate adding a new message to the BehaviorSubject
+      messagesSubject.next([newMessage, ...mockMessages]);
 
-      expect(component.messages.length).toBe(3);
-      expect(component.messages[0]).toEqual(newMessage);
+      component.messages$.subscribe((messages) => {
+        expect(messages.length).toBe(3);
+        expect(messages[0]).toEqual(newMessage);
+        done();
+      });
     });
   });
 

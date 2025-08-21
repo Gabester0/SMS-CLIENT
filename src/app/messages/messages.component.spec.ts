@@ -90,7 +90,7 @@ describe('MessagesComponent', () => {
   });
 
   describe('onMessageSent', () => {
-    it('should add message to message history when component is available', () => {
+    it('should reconnect websocket when a message is sent', () => {
       const mockMessage: Message = {
         _id: '1',
         content: 'Test message',
@@ -102,13 +102,12 @@ describe('MessagesComponent', () => {
         updated_at: new Date().toISOString(),
         user_id: 'user1',
       };
-
-      // Create spy for addMessage method
-      const addMessageSpy = spyOn(component.messageHistory!, 'addMessage');
+      const websocketService = (component as any).websocketService;
+      spyOn(websocketService, 'connect');
 
       component.onMessageSent(mockMessage);
 
-      expect(addMessageSpy).toHaveBeenCalledWith(mockMessage);
+      expect(websocketService.connect).toHaveBeenCalled();
     });
   });
 });
