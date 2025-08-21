@@ -1,0 +1,38 @@
+<div *ngIf="loading" class="loading-container">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="error" class="error-message">
+  {{ error }}
+</div>
+<div *ngIf="!loading && !error && messages.length === 0" class="empty-message">
+  No messages yet.
+</div>
+<div *ngIf="!loading && !error" class="messages-list">
+  <mat-card class="history-container">
+    <mat-card-header>
+      <mat-card-title>Message History ({{ messages.length }})</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="messages-container">
+        <mat-card *ngFor="let msg of messages" class="message-card">
+          <div class="message-header">
+            <span class="message-to">{{
+              formatPhoneNumber(msg.to_phone_number)
+            }}</span>
+            <span class="message-date">{{
+              msg.created_at | date : "EEEE, dd-MMM-yy HH:mm:ss 'UTC'"
+            }}</span>
+          </div>
+          <div class="message-body">
+            {{ msg.content }}
+          </div>
+          <div class="message-footer">
+            <span class="message-status" [ngClass]="msg.status">{{
+              msg.status
+            }}</span>
+          </div>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

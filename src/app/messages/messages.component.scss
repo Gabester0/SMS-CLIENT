@@ -1,0 +1,25 @@
+.messages-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.messages-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+button {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+}
+
+@media (max-width: 600px) {
+  .messages-container {
+    gap: 1rem;
+    padding: 0 0.5rem;
+  }
+}
