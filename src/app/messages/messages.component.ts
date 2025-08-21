@@ -45,8 +45,10 @@ export class MessagesComponent implements OnInit, OnDestroy {
   }
 
   onMessageSent(message: Message) {
-    if (this.messageHistory) {
-      this.messageHistory.addMessage(message);
-    }
+    // MessageHistoryComponent no longer has addMessage.
+    // If you want to refresh the message list after sending, you can reload from the service:
+    this.websocketService.connect(); // Optionally reconnect if needed
+    // Or, if your MessageService has a method to reload messages:
+    // this.messageService.getMessages().subscribe();
   }
 }

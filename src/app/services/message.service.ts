@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { WebsocketService } from './websocket.service';
+import { tap } from 'rxjs/operators';
 
 export interface Message {
   _id: string;
@@ -27,11 +28,11 @@ export class MessageService {
     private websocketService: WebsocketService
   ) {
     // Subscribe to real-time status updates
-    this.websocketService.messageStatusUpdates$.subscribe(update => {
+    this.websocketService.messageStatusUpdates$.subscribe((update) => {
       if (update) {
         const currentMessages = this.messages.getValue();
-        const updatedMessages = currentMessages.map(message => 
-          message._id === update.message_id 
+        const updatedMessages = currentMessages.map((message) =>
+          message._id === update.message_id
             ? { ...message, status: update.status }
             : message
         );
@@ -41,8 +42,9 @@ export class MessageService {
   }
 
   getMessages(): Observable<Message[]> {
-    this.http.get<Message[]>(this.apiUrl, { withCredentials: true })
-      .subscribe(messages => this.messages.next(messages));
+    this.http
+      .get<Message[]>(this.apiUrl, { withCredentials: true })
+      .subscribe((messages) => this.messages.next(messages));
     return this.messages$;
   }
 
@@ -50,10 +52,14 @@ export class MessageService {
     to_phone_number: string;
     content: string;
   }): Observable<Message> {
-    return this.http.post<Message>(
-      this.apiUrl,
-      { message: data },
-      { withCredentials: true }
-    );
+    return this.http
+      .post<Message>(this.apiUrl, { message: data }, { withCredentials: true })
+      .pipe(
+        tap((newMessage) => {
+          // Add the new message to the top of the list
+          const currentMessages = this.messages.getValue();
+          this.messages.next([newMessage, ...currentMessages]);
+        })
+      );
   }
 }
