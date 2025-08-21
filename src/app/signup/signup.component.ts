@@ -40,10 +40,26 @@ export class SignupComponent {
     private router: Router
   ) {
     this.signupForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-      password_confirmation: ['', Validators.required],
+      email: ['', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      password_confirmation: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          this.passwordsMatchValidator(),
+        ],
+      ],
     });
+  }
+
+  passwordsMatchValidator() {
+    return (control: import('@angular/forms').AbstractControl) => {
+      if (!this.signupForm) return null;
+      const password = this.signupForm.get('password')?.value;
+      const confirm = control.value;
+      return password === confirm ? null : { passwordsMismatch: true };
+    };
   }
 
   onSubmit() {

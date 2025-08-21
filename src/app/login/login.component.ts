@@ -42,8 +42,8 @@ export class LoginComponent {
     private route: ActivatedRoute
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      email: ['', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
     this.route.queryParams.subscribe((params) => {
       this.signupSuccess = params['signup'] === 'success';
