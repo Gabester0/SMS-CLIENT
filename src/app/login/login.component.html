@@ -28,6 +28,9 @@
     </button>
   </div>
   <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+  <div *ngIf="signupSuccess" class="success flex-row">
+    Account created! Please log in.
+  </div>
   <div *ngIf="error" class="error">{{ error }}</div>
   <div class="flex-row">
     <a routerLink="/signup">Don't have an account? Sign up</a>

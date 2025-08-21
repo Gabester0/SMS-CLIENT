@@ -11,7 +11,7 @@ import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -34,7 +34,11 @@ export class SignupComponent {
   loading = false;
   error: string | null = null;
 
-  constructor(private fb: FormBuilder, private auth: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router
+  ) {
     this.signupForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -47,7 +51,12 @@ export class SignupComponent {
     this.loading = true;
     this.error = null;
     this.auth.signup(this.signupForm.value).subscribe({
-      next: () => (this.loading = false),
+      next: () => {
+        this.loading = false;
+        this.router.navigate(['/login'], {
+          queryParams: { signup: 'success' },
+        });
+      },
       error: (err) => {
         this.error = err.error?.error || 'Signup failed';
         this.loading = false;

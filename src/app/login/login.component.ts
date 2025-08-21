@@ -6,6 +6,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -32,11 +33,20 @@ export class LoginComponent {
   loginForm: FormGroup;
   loading = false;
   error: string | null = null;
+  signupSuccess = false;
 
-  constructor(private fb: FormBuilder, private auth: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
+    });
+    this.route.queryParams.subscribe((params) => {
+      this.signupSuccess = params['signup'] === 'success';
     });
   }
 
@@ -45,7 +55,21 @@ export class LoginComponent {
     this.loading = true;
     this.error = null;
     this.auth.login(this.loginForm.value).subscribe({
-      next: () => (this.loading = false),
+      next: (response) => {
+        // Extract JWT from response headers
+        // Devise-JWT sends the token in the Authorization header
+        const token =
+          response && response.headers && response.headers.get
+            ? response.headers.get('Authorization')
+            : null;
+        // Fallback: check if token is in response body (rare for Devise)
+        const jwt = token || response?.token;
+        if (jwt) {
+          localStorage.setItem('token', jwt.replace('Bearer ', ''));
+        }
+        this.loading = false;
+        this.router.navigate(['/messages']);
+      },
       error: (err) => {
         this.error = err.error?.error || 'Login failed';
         this.loading = false;
